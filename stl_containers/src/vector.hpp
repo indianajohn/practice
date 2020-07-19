@@ -14,6 +14,15 @@ public:
     }
   }
 
+  template <typename Other> vector(const Other &begin, const Other &end) {
+    m_num_allocated = 10;
+    m_num_elements = 0;
+    m_storage = new T[m_num_allocated];
+    for (auto itr = begin; itr != end; itr++) {
+      this->push_back(*itr);
+    }
+  }
+
   void push_back(const T &new_elem) {
     if (m_num_elements >= m_num_allocated) {
       this->allocate(m_num_allocated * 2);

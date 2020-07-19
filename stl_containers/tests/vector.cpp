@@ -146,6 +146,16 @@ template <typename T> void testResizeSmaller() {
   }
 }
 
+template <typename T> void testIterConstruction() {
+  std::vector<T> stl_vec;
+  prac::vector<T> vec = randomVector<T>(&stl_vec, rand() % 30 + 20);
+  prac::vector<T> itr_constructed(stl_vec.begin(), stl_vec.end());
+  ASSERT_EQ(itr_constructed.size(), stl_vec.size());
+  for (size_t i = 0; i < stl_vec.size(); i++) {
+    ASSERT(stl_vec[i] == itr_constructed[i]);
+  }
+}
+
 template <typename T> void testAll() {
   for (size_t trials = 0; trials < 50; trials++) {
     testConstruction<T>();
@@ -155,6 +165,7 @@ template <typename T> void testAll() {
     testReverseIterators<T>();
     testResizeLarger<T>();
     testResizeSmaller<T>();
+    testIterConstruction<T>();
   }
 }
 
