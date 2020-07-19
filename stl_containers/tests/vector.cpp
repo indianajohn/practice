@@ -1,5 +1,6 @@
 #include "vector.hpp"
 #include "assert.hpp"
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -31,10 +32,7 @@ prac::vector<T> randomVector(std::vector<T> *stl_vec = nullptr,
 }
 }; // namespace
 
-void testConstruction() {
-  prac::vector<int> int_vec;
-  prac::vector<std::string> my_vec;
-}
+template <typename T> void testConstruction() { prac::vector<T> my_vec; }
 
 template <typename T> void testPushBack() {
   // For now, just make sure we don't seg fault on
@@ -44,8 +42,23 @@ template <typename T> void testPushBack() {
   ASSERT_EQ(vec.size(), stl_vector.size());
 }
 
+template <typename T> void testBracketOperator() {
+  // For now, just make sure we don't seg fault on
+  // construction and push_back.
+  std::vector<T> stl_vector;
+  prac::vector<T> vec = randomVector<T>(&stl_vector);
+  for (size_t i = 0; i < stl_vector.size(); i++) {
+    ASSERT(stl_vector[i] == vec[i]);
+  }
+}
+
+template <typename T> void testAll() {
+  testConstruction<T>();
+  testPushBack<T>();
+  testBracketOperator<T>();
+}
+
 int main(int argc, char **argv) {
-  testConstruction();
-  testPushBack<int>();
-  testPushBack<std::string>();
+  testAll<int>();
+  testAll<std::string>();
 }

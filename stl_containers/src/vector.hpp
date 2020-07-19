@@ -27,6 +27,9 @@ public:
     m_num_elements++;
   }
 
+  const T &operator[](const size_t &i) const { return m_storage[i]; }
+  T &operator[](const size_t &i) { return m_storage[i]; }
+
   size_t size() const { return m_num_elements; }
 
 private:
