@@ -1,0 +1,2 @@
+add_library(stl_containers INTERFACE)
+target_include_directories(stl_containers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
