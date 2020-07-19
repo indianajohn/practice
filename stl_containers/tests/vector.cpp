@@ -91,11 +91,38 @@ template <typename T> void testIterators() {
   }
 }
 
+template <typename T> void testReverseIterators() {
+  std::vector<T> stl_vector;
+  prac::vector<T> vec = randomVector<T>(&stl_vector);
+  size_t num_visitations = 0;
+
+  // Make sure reverse iterators iterate correctly (in the
+  // opposite direction).
+  for (auto itr = vec.rbegin(); itr != vec.rend(); itr++) {
+    ASSERT(vec[vec.size() - num_visitations - 1] == *itr);
+    num_visitations++;
+  }
+  ASSERT(num_visitations == stl_vector.size());
+
+  // Make sure reverse iterators can write back.
+  prac::vector<T> new_values = randomVector<T>(nullptr, vec.size());
+  auto ritr = vec.rbegin();
+  for (int i = vec.size() - 1; i >= 0; i--) {
+    *ritr = new_values[i];
+    ritr++;
+  }
+  ASSERT(ritr == vec.rend());
+  for (size_t i = 0; i < vec.size(); i++) {
+    ASSERT(vec[i] == new_values[i]);
+  }
+}
+
 template <typename T> void testAll() {
   testConstruction<T>();
   testPushBack<T>();
   testBracketOperator<T>();
   testIterators<T>();
+  testReverseIterators<T>();
 }
 
 int main(int argc, char **argv) {

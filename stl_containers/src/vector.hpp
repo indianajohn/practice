@@ -66,6 +66,41 @@ public:
   const iterator cbegin() const { return iterator(this); }
   const iterator cend() const { return iterator(this, this->size()); }
 
+  class reverse_iterator
+      : public std::iterator<std::input_iterator_tag, // iterator_category
+                             T,                       // value_type
+                             T,                       // difference_type
+                             const T *,               // pointer
+                             T                        // reference
+                             > {
+    vector<T> *m_vector = nullptr;
+    size_t m_pos;
+
+  public:
+    reverse_iterator(vector<T> *vector, size_t pos = 0)
+        : m_vector(vector), m_pos(pos) {}
+    reverse_iterator &operator++() {
+      m_pos++;
+      return *this;
+    }
+    reverse_iterator operator++(int) {
+      reverse_iterator retval = *this;
+      ++(*this);
+      return retval;
+    }
+    bool operator==(reverse_iterator other) const {
+      return m_pos == other.m_pos;
+    }
+    bool operator!=(reverse_iterator other) const { return !(*this == other); }
+    T &operator*() const {
+      return m_vector->operator[](m_vector->size() - m_pos - 1);
+    }
+  };
+  reverse_iterator rbegin() { return reverse_iterator(this); }
+  reverse_iterator rend() { return reverse_iterator(this, this->size()); }
+  const reverse_iterator crbegin() const { return iterator(this); }
+  const reverse_iterator crend() const { return iterator(this, this->size()); }
+
 private:
   T *m_storage;
   size_t m_num_allocated;
