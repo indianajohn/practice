@@ -16,13 +16,7 @@ public:
 
   void push_back(const T &new_elem) {
     if (m_num_elements >= m_num_allocated) {
-      T *new_storage = new T[m_num_allocated * 2];
-      for (size_t i = 0; i < m_num_elements; i++) {
-        new_storage[i] = m_storage[i];
-      }
-      delete[] m_storage;
-      m_num_allocated = 2 * m_num_allocated;
-      m_storage = new_storage;
+      this->allocate(m_num_allocated * 2);
     }
     m_storage[m_num_elements] = new_elem;
     m_num_elements++;
@@ -33,6 +27,32 @@ public:
   T &operator[](const size_t &i) { return m_storage[i]; }
 
   size_t size() const { return m_num_elements; }
+
+  void resize(const size_t &sz, const T &default_value) {
+    // Reallocate
+    if (sz >= m_num_elements) {
+      this->allocate(sz + 10);
+    }
+    // Allocate copied our values. We need to set the
+    // remaining defaults.
+    for (size_t i = m_num_elements; i < sz; i++) {
+      m_storage[i] = default_value;
+    }
+    // Change the tracking variable.
+    m_num_elements = sz;
+  }
+
+  void allocate(const size_t &sz) {
+    if (sz > m_num_allocated) {
+      T *new_storage = new T[sz];
+      for (size_t i = 0; i < m_num_elements; i++) {
+        new_storage[i] = m_storage[i];
+      }
+      delete[] m_storage;
+      m_num_allocated = sz;
+      m_storage = new_storage;
+    }
+  }
 
   class iterator
       : public std::iterator<std::input_iterator_tag, // iterator_category

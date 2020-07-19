@@ -117,12 +117,45 @@ template <typename T> void testReverseIterators() {
   }
 }
 
+template <typename T> void testResizeLarger() {
+  std::vector<T> stl_vec;
+  prac::vector<T> vec = randomVector<T>(&stl_vec);
+  size_t size_before = vec.size();
+  auto val = randomVal<T>();
+  int new_size = size_before + 20;
+  vec.resize(new_size, val);
+  ASSERT_EQ(vec.size(), new_size);
+  for (size_t i = 0; i < size_before; i++) {
+    ASSERT(vec[i] == stl_vec[i]);
+  }
+  for (size_t i = size_before; i < new_size; i++) {
+    ASSERT(vec[i] == val);
+  }
+}
+
+template <typename T> void testResizeSmaller() {
+  std::vector<T> stl_vec;
+  prac::vector<T> vec = randomVector<T>(&stl_vec, rand() % 30 + 20);
+  size_t size_before = vec.size();
+  auto val = randomVal<T>();
+  int new_size = size_before - 10;
+  vec.resize(new_size, val);
+  ASSERT_EQ(vec.size(), new_size);
+  for (size_t i = 0; i < size_before; i++) {
+    ASSERT(vec[i] == stl_vec[i]);
+  }
+}
+
 template <typename T> void testAll() {
-  testConstruction<T>();
-  testPushBack<T>();
-  testBracketOperator<T>();
-  testIterators<T>();
-  testReverseIterators<T>();
+  for (size_t trials = 0; trials < 50; trials++) {
+    testConstruction<T>();
+    testPushBack<T>();
+    testBracketOperator<T>();
+    testIterators<T>();
+    testReverseIterators<T>();
+    testResizeLarger<T>();
+    testResizeSmaller<T>();
+  }
 }
 
 int main(int argc, char **argv) {
