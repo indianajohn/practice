@@ -1,4 +1,5 @@
 #include "vector.hpp"
+#include "assert.hpp"
 #include <string>
 #include <vector>
 
@@ -16,8 +17,8 @@ template <> std::string randomVal<std::string>() {
 }
 
 template <typename T>
-prac::vector<T> randomVector(const size_t &size = rand() % 20 + 1,
-                             std::vector<T> *stl_vec = nullptr) {
+prac::vector<T> randomVector(std::vector<T> *stl_vec = nullptr,
+                             const size_t &size = rand() % 20 + 1) {
   prac::vector<T> new_vec;
   for (size_t j = 0; j < size; j++) {
     T val = randomVal<T>();
@@ -38,7 +39,9 @@ void testConstruction() {
 template <typename T> void testPushBack() {
   // For now, just make sure we don't seg fault on
   // construction and push_back.
-  prac::vector<T> int_vec = randomVector<T>();
+  std::vector<T> stl_vector;
+  prac::vector<T> vec = randomVector<T>(&stl_vector);
+  ASSERT_EQ(vec.size(), stl_vector.size());
 }
 
 int main(int argc, char **argv) {

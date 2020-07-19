@@ -10,5 +10,9 @@ public:
   void push_back(const T &new_elem) {
     // TODO
   }
+  size_t size() const {
+    // TODO
+    return 0;
+  }
 };
 }; // namespace prac
