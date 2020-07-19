@@ -5,3 +5,4 @@ function(prepare_test test_name source_file)
 endfunction()
 
 prepare_test(framework test_framework.cpp)
+prepare_test(vector vector.cpp)
