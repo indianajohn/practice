@@ -35,16 +35,15 @@ prac::vector<T> randomVector(std::vector<T> *stl_vec = nullptr,
 template <typename T> void testConstruction() { prac::vector<T> my_vec; }
 
 template <typename T> void testPushBack() {
-  // For now, just make sure we don't seg fault on
-  // construction and push_back.
   std::vector<T> stl_vector;
   prac::vector<T> vec = randomVector<T>(&stl_vector);
   ASSERT_EQ(vec.size(), stl_vector.size());
 }
 
 template <typename T> void testBracketOperator() {
-  // For now, just make sure we don't seg fault on
-  // construction and push_back.
+  // Test that we can write to the vector and
+  // the writes will be reflected. Also implicitly test
+  // push_back further.
   std::vector<T> stl_vector;
   prac::vector<T> vec = randomVector<T>(&stl_vector);
   for (size_t i = 0; i < stl_vector.size(); i++) {
@@ -52,10 +51,51 @@ template <typename T> void testBracketOperator() {
   }
 }
 
+template <typename T> void testIterators() {
+  // Test every form of iterator works, and that
+  // C++ iterator helpers work.
+  std::vector<T> stl_vector;
+  prac::vector<T> vec = randomVector<T>(&stl_vector);
+  size_t num_visitations = 0;
+  for (auto itr = vec.begin(); itr != vec.end(); itr++) {
+    ASSERT(vec[num_visitations] == *itr);
+    num_visitations++;
+  }
+  ASSERT(num_visitations == stl_vector.size());
+  num_visitations = 0;
+  for (auto elem : vec) {
+    ASSERT(vec[num_visitations] == elem);
+    num_visitations++;
+  }
+  ASSERT(num_visitations == stl_vector.size());
+  num_visitations = 0;
+  for (auto &elem : vec) {
+    ASSERT(vec[num_visitations] == elem);
+    num_visitations++;
+  }
+  ASSERT(num_visitations == stl_vector.size());
+  num_visitations = 0;
+  for (const auto &elem : vec) {
+    ASSERT(vec[num_visitations] == elem);
+    num_visitations++;
+  }
+  ASSERT(num_visitations == stl_vector.size());
+  // Ensure we can write back using the []
+  // operator.
+  prac::vector<T> new_values = randomVector<T>(nullptr, vec.size());
+  for (size_t i = 0; i < vec.size(); i++) {
+    vec[i] = new_values[i];
+  }
+  for (size_t i = 0; i < vec.size(); i++) {
+    ASSERT(vec[i] == new_values[i]);
+  }
+}
+
 template <typename T> void testAll() {
   testConstruction<T>();
   testPushBack<T>();
   testBracketOperator<T>();
+  testIterators<T>();
 }
 
 int main(int argc, char **argv) {

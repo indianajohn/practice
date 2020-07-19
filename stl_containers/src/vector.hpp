@@ -1,4 +1,5 @@
 #pragma once
+#include <iterator>
 #include <stddef.h>
 
 namespace prac {
@@ -28,9 +29,42 @@ public:
   }
 
   const T &operator[](const size_t &i) const { return m_storage[i]; }
+
   T &operator[](const size_t &i) { return m_storage[i]; }
 
   size_t size() const { return m_num_elements; }
+
+  class iterator
+      : public std::iterator<std::input_iterator_tag, // iterator_category
+                             T,                       // value_type
+                             T,                       // difference_type
+                             const T *,               // pointer
+                             T                        // reference
+                             > {
+    vector<T> *m_vector = nullptr;
+    size_t m_pos;
+
+  public:
+    iterator(vector<T> *vector, size_t pos = 0)
+        : m_vector(vector), m_pos(pos) {}
+    iterator &operator++() {
+      m_pos++;
+      return *this;
+    }
+    iterator operator++(int) {
+      iterator retval = *this;
+      ++(*this);
+      return retval;
+    }
+    bool operator==(iterator other) const { return m_pos == other.m_pos; }
+    bool operator!=(iterator other) const { return !(*this == other); }
+    const T &operator*() const { return m_vector->operator[](m_pos); }
+    T &operator*() { return m_vector->operator[](m_pos); }
+  };
+  iterator begin() { return iterator(this); }
+  iterator end() { return iterator(this, this->size()); }
+  const iterator cbegin() const { return iterator(this); }
+  const iterator cend() const { return iterator(this, this->size()); }
 
 private:
   T *m_storage;
