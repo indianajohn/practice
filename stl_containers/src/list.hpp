@@ -4,7 +4,7 @@
 
 namespace prac {
 
-// A doubly-linked list.
+/// A doubly-linked list.
 template <typename T> struct ListNode {
   ListNode(const T &val_in) : val(val_in), last(nullptr), next(nullptr) {}
   ListNode<T> *last;
@@ -12,8 +12,14 @@ template <typename T> struct ListNode {
   T val;
 };
 
+/// A container that is based on a doubly-linked list. 
+/*
+ * O(1) insertion on either side of the container, O(1) 
+ * iteration incrementation. No random access.
+ */
 template <typename T> class list {
 public:
+  /// Constructor for zero-size list.
   list() : m_size(0), m_front(nullptr), m_back(nullptr) {}
 
   /// Construction from STL container iterators.
@@ -29,6 +35,11 @@ public:
     }
   }
 
+  /// Add one element to the back of the list.
+  /*
+   * O(1) complexity.
+   * @param new_elem - the element to add.
+   */
   void push_back(const T &new_elem) {
     if (m_front == nullptr) {
       m_front = new ListNode<T>(new_elem);
@@ -41,6 +52,11 @@ public:
     m_size++;
   }
 
+  /// Add one element to the front of the list.
+  /*
+   * O(1) complexity.
+   * @param new_elem - the element to add.
+   */
   void push_front(const T &new_elem) {
     if (m_front == nullptr) {
       m_front = new ListNode<T>(new_elem);
@@ -54,10 +70,24 @@ public:
     m_size++;
   }
 
+  /// Get the front element.
+  /*
+   * O(1) complexity.
+   * @return the front element.
+   */
   const T &front() const { return m_front->val; }
 
+  /// Get the front element.
+  /*
+   * O(1) complexity.
+   * @return the front element.
+   */
   T &front() { return m_front->val; }
 
+  /// Remove the front element.
+  /*
+   * O(1) complexity.
+   */
   void pop_front() {
     m_front = m_front->next;
     if (m_front) {
@@ -67,6 +97,10 @@ public:
     m_size--;
   }
 
+  /// Remove the back element.
+  /*
+   * O(1) complexity.
+   */
   void pop_back() {
     m_back = m_back->last;
     if (m_back) {
@@ -76,8 +110,18 @@ public:
     m_size--;
   }
 
+  /// Get the back element.
+  /*
+   * O(1) complexity.
+   * @return the front element.
+   */
   const T &back() const { return m_back->val; }
 
+  /// Get the back element.
+  /*
+   * O(1) complexity.
+   * @return the back element.
+   */
   T &back() { return m_back->val; }
 
   ~list() {
@@ -88,6 +132,10 @@ public:
     }
   }
 
+  /// Get the size of the container.
+  /*
+   * @return the size of the container.
+   */
   size_t size() const { return m_size; }
 
   class iterator
@@ -192,7 +240,7 @@ public:
     T &operator*() { return m_node->val; }
   };
 
-  /// Forward iterators. All of these are created and incremented in O(1).
+  /// Reverse iterators. All of these are created and incremented in O(1).
   reverse_iterator rbegin() { return reverse_iterator(this->m_back); }
   reverse_iterator rend() { return reverse_iterator(nullptr); }
   const reverse_iterator crbegin() const {

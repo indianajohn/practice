@@ -10,4 +10,4 @@ Problem statement
 
 Timing
 ------
-Implementation of the above took about an hour.
+Implementation of the above took about an hour and 10 minutes.
