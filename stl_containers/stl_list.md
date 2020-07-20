@@ -7,3 +7,7 @@ Problem statement
 * Implement forward & reverse bidirectional iterators.
 
 * Useful constructors.
+
+Timing
+------
+Implementation of the above took about an hour.
