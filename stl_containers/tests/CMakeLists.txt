@@ -6,3 +6,4 @@ endfunction()
 
 prepare_test(framework test_framework.cpp)
 prepare_test(vector vector.cpp)
+prepare_test(list list.cpp)
