@@ -23,15 +23,29 @@ prac::list<T> randomList(std::list<T> *stl_list = nullptr,
 }; // namespace
 
 template <typename T> void testConstruction() { prac::list<T> new_list; }
+
 template <typename T> void testPushBack() {
   std::list<T> stl_list;
   prac::list<T> new_list = randomList<T>(&stl_list);
   ASSERT_EQ(new_list.size(), stl_list.size());
 }
 
+template <typename T> void testPushFront() {
+  std::list<T> stl_list;
+  prac::list<T> new_list;
+  size_t size = rand() % 20 + 1;
+  for (size_t j = 0; j < size; j++) {
+    T val = randomVal<T>();
+    new_list.push_front(val);
+    stl_list.push_front(val);
+  }
+  ASSERT_EQ(new_list.size(), stl_list.size());
+}
+
 template <typename T> void testAll() {
   testConstruction<T>();
   testPushBack<T>();
+  testPushFront<T>();
 }
 
 int main(int argc, char **argv) {
