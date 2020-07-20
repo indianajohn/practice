@@ -15,6 +15,20 @@ template <typename T> struct ListNode {
 template <typename T> class list {
 public:
   list() : m_size(0), m_front(nullptr), m_back(nullptr) {}
+
+  /// Construction from STL container iterators.
+  /*
+   * @param begin - the beginning iterator.
+   * @param end - the ending iterator.
+   */
+  template <typename Other>
+  list(const Other &begin, const Other &end)
+      : m_size(0), m_front(nullptr), m_back(nullptr) {
+    for (auto itr = begin; itr != end; itr++) {
+      this->push_back(*itr);
+    }
+  }
+
   void push_back(const T &new_elem) {
     if (m_front == nullptr) {
       m_front = new ListNode<T>(new_elem);
