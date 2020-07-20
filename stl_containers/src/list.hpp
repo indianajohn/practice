@@ -39,6 +39,32 @@ public:
     m_size++;
   }
 
+  const T &front() const { return m_front->val; }
+
+  T &front() { return m_front->val; }
+
+  void pop_front() {
+    m_front = m_front->next;
+    if (m_front) {
+      delete m_front->last;
+      m_front->last = nullptr;
+    }
+    m_size--;
+  }
+
+  void pop_back() {
+    m_back = m_back->last;
+    if (m_back) {
+      delete m_back->next;
+      m_back->next = nullptr;
+    }
+    m_size--;
+  }
+
+  const T &back() const { return m_back->val; }
+
+  T &back() { return m_back->val; }
+
   ~list() {
     while (m_front != nullptr) {
       auto last = m_front;
