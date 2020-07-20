@@ -1,22 +1,12 @@
 #include "vector.hpp"
 #include "assert.hpp"
+#include "test_utils.hpp"
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
 
 namespace {
-
-template <typename T> T randomVal() { return T(rand() % 1000); }
-
-template <> std::string randomVal<std::string>() {
-  size_t num_chars = rand() % 20;
-  std::string new_val;
-  for (size_t j = 0; j < num_chars; j++) {
-    new_val.push_back('a' + (rand() % 26));
-  }
-  return new_val;
-}
 
 template <typename T>
 prac::vector<T> randomVector(std::vector<T> *stl_vec = nullptr,
@@ -31,6 +21,7 @@ prac::vector<T> randomVector(std::vector<T> *stl_vec = nullptr,
   }
   return new_vec;
 }
+
 }; // namespace
 
 template <typename T> void testConstruction() { prac::vector<T> my_vec; }
