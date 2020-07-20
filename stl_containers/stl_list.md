@@ -7,5 +7,3 @@ Problem statement
 * Implement forward & reverse bidirectional iterators.
 
 * Useful constructors.
-
-* `std::sort` should work, iterators should be bidirectional.

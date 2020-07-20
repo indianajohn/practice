@@ -86,7 +86,7 @@ public:
     ListNode<T> *m_node = nullptr;
 
   public:
-    iterator(ListNode<T> *node, size_t pos = 0) : m_node(node) {}
+    iterator(ListNode<T> *node) : m_node(node) {}
 
     /// Prefix
     iterator &operator++() {
@@ -128,6 +128,63 @@ public:
   iterator end() { return iterator(nullptr); }
   const iterator cbegin() const { return iterator(this->m_front); }
   const iterator cend() const { return iterator(nullptr); }
+
+  class reverse_iterator
+      : public std::iterator<std::input_iterator_tag, // iterator_category
+                             T,                       // value_type
+                             size_t,                  // difference_type
+                             const T *,               // pointer
+                             T                        // reference
+                             > {
+    ListNode<T> *m_node = nullptr;
+
+  public:
+    reverse_iterator(ListNode<T> *node, size_t pos = 0) : m_node(node) {}
+
+    /// Prefix
+    reverse_iterator &operator++() {
+      m_node = m_node->last;
+      return *this;
+    }
+
+    /// Postfix
+    reverse_iterator operator++(int) {
+      reverse_iterator retval = *this;
+      ++(*this);
+      return retval;
+    }
+
+    /// Prefix
+    reverse_iterator &operator--() {
+      m_node = m_node->next;
+      return *this;
+    }
+
+    /// Postfix
+    reverse_iterator operator--(int) {
+      reverse_iterator retval = *this;
+      --(*this);
+      return retval;
+    }
+
+    bool operator==(reverse_iterator other) const {
+      return m_node == other.m_node;
+    }
+
+    bool operator!=(reverse_iterator other) const { return !(*this == other); }
+
+    const T &operator*() const { return m_node->val; }
+
+    T &operator*() { return m_node->val; }
+  };
+
+  /// Forward iterators. All of these are created and incremented in O(1).
+  reverse_iterator rbegin() { return reverse_iterator(this->m_back); }
+  reverse_iterator rend() { return reverse_iterator(nullptr); }
+  const reverse_iterator crbegin() const {
+    return reverse_iterator(this->m_front);
+  }
+  const reverse_iterator crend() const { return reverse_iterator(nullptr); }
 
 private:
   size_t m_size;

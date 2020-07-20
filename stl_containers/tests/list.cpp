@@ -80,12 +80,30 @@ template <typename T> void testForwardIterators() {
   ASSERT(stl_itr == stl_list.end());
 }
 
+template <typename T> void testReverseIterators() {
+  std::list<T> stl_list;
+  prac::list<T> new_list = randomList<T>(&stl_list);
+  auto itr = new_list.rbegin();
+  auto stl_itr = stl_list.rbegin();
+  size_t num_nodes = 0;
+  while (itr != new_list.rend()) {
+    ASSERT(*itr == *stl_itr);
+    itr++;
+    stl_itr++;
+    num_nodes++;
+  }
+  ASSERT(num_nodes == new_list.size());
+  ASSERT(itr == new_list.rend());
+  ASSERT(stl_itr == stl_list.rend());
+}
+
 template <typename T> void testAll() {
   testConstruction<T>();
   testPushBack<T>();
   testPushFront<T>();
   testBack<T>();
   testForwardIterators<T>();
+  testReverseIterators<T>();
 }
 
 int main(int argc, char **argv) {
