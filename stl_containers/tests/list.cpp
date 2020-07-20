@@ -63,11 +63,29 @@ template <typename T> void testFront() {
   }
 }
 
+template <typename T> void testForwardIterators() {
+  std::list<T> stl_list;
+  prac::list<T> new_list = randomList<T>(&stl_list);
+  auto itr = new_list.begin();
+  auto stl_itr = stl_list.begin();
+  size_t num_nodes = 0;
+  while (itr != new_list.end()) {
+    ASSERT(*itr == *stl_itr);
+    itr++;
+    stl_itr++;
+    num_nodes++;
+  }
+  ASSERT(num_nodes == new_list.size());
+  ASSERT(itr == new_list.end());
+  ASSERT(stl_itr == stl_list.end());
+}
+
 template <typename T> void testAll() {
   testConstruction<T>();
   testPushBack<T>();
   testPushFront<T>();
   testBack<T>();
+  testForwardIterators<T>();
 }
 
 int main(int argc, char **argv) {

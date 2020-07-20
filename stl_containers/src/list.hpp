@@ -1,4 +1,5 @@
 #pragma once
+#include <iterator>
 #include <stddef.h>
 
 namespace prac {
@@ -74,6 +75,59 @@ public:
   }
 
   size_t size() const { return m_size; }
+
+  class iterator
+      : public std::iterator<std::input_iterator_tag, // iterator_category
+                             T,                       // value_type
+                             size_t,                  // difference_type
+                             const T *,               // pointer
+                             T                        // reference
+                             > {
+    ListNode<T> *m_node = nullptr;
+
+  public:
+    iterator(ListNode<T> *node, size_t pos = 0) : m_node(node) {}
+
+    /// Prefix
+    iterator &operator++() {
+      m_node = m_node->next;
+      return *this;
+    }
+
+    /// Postfix
+    iterator operator++(int) {
+      iterator retval = *this;
+      ++(*this);
+      return retval;
+    }
+
+    /// Prefix
+    iterator &operator--() {
+      m_node = m_node->last;
+      return *this;
+    }
+
+    /// Postfix
+    iterator operator--(int) {
+      iterator retval = *this;
+      --(*this);
+      return retval;
+    }
+
+    bool operator==(iterator other) const { return m_node == other.m_node; }
+
+    bool operator!=(iterator other) const { return !(*this == other); }
+
+    const T &operator*() const { return m_node->val; }
+
+    T &operator*() { return m_node->val; }
+  };
+
+  /// Forward iterators. All of these are created and incremented in O(1).
+  iterator begin() { return iterator(this->m_front); }
+  iterator end() { return iterator(nullptr); }
+  const iterator cbegin() const { return iterator(this->m_front); }
+  const iterator cend() const { return iterator(nullptr); }
 
 private:
   size_t m_size;
