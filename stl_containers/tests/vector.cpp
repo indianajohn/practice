@@ -1,5 +1,6 @@
 #include "vector.hpp"
 #include "assert.hpp"
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -156,6 +157,77 @@ template <typename T> void testIterConstruction() {
   }
 }
 
+template <typename T> void testOperators() {
+  prac::vector<T> vec = randomVector<T>(nullptr, 5);
+  size_t diff = vec.end() - vec.begin();
+  ASSERT_EQ(diff, vec.size());
+  ASSERT(vec.end() > vec.begin());
+  ASSERT(vec.begin() < vec.end());
+  auto itr = vec.begin();
+  itr = itr + 1;
+  ASSERT(*itr == vec[1]);
+  itr = itr - 1;
+  ASSERT(*itr == vec[0]);
+  auto forward_postfix = itr++;
+  ASSERT(*itr == vec[1]);
+  ASSERT(*forward_postfix == vec[0]);
+  auto reverse_postfix = itr--;
+  ASSERT(*reverse_postfix == vec[1]);
+  ASSERT(*itr == vec[0]);
+  auto forward_prefix = ++itr;
+  ASSERT(*itr == vec[1]);
+  ASSERT(*forward_prefix == vec[1]);
+  auto reverse_prefix = --itr;
+  ASSERT(*reverse_prefix == vec[0]);
+  ASSERT(*itr == vec[0]);
+}
+
+template <typename T> void testReverseOperators() {
+  prac::vector<T> vec = randomVector<T>(nullptr, 5);
+  size_t last = vec.size() - 1;
+  size_t diff = vec.rend() - vec.rbegin();
+  ASSERT_EQ(diff, vec.size());
+  ASSERT(vec.rend() > vec.rbegin());
+  ASSERT(vec.rbegin() < vec.rend());
+  auto itr = vec.rbegin();
+  ASSERT(*itr == vec[last]);
+  itr = itr + 1;
+  ASSERT(*itr == vec[last - 1]);
+  itr = itr - 1;
+  ASSERT(*itr == vec[last]);
+  auto forward_postfix = itr++;
+  ASSERT(*itr == vec[last - 1]);
+  ASSERT(*forward_postfix == vec[last]);
+  auto reverse_postfix = itr--;
+  ASSERT(*reverse_postfix == vec[last - 1]);
+  ASSERT(*itr == vec[last]);
+  auto forward_prefix = ++itr;
+  ASSERT(*itr == vec[last - 1]);
+  ASSERT(*forward_prefix == vec[last - 1]);
+  auto reverse_prefix = --itr;
+  ASSERT(*reverse_prefix == vec[last]);
+  ASSERT(*itr == vec[last]);
+}
+
+template <typename T> void testAlgorithms() {
+  {
+    std::vector<T> stl_vec;
+    prac::vector<T> vec = randomVector<T>(&stl_vec, rand() % 30 + 20);
+    std::sort(vec.begin(), vec.end());
+    for (size_t i = 1; i < vec.size(); i++) {
+      ASSERT(vec[i - 1] <= vec[i]);
+    }
+  }
+  {
+    std::vector<T> stl_vec;
+    prac::vector<T> vec = randomVector<T>(&stl_vec, rand() % 30 + 20);
+    std::sort(vec.rbegin(), vec.rend());
+    for (size_t i = 1; i < vec.size(); i++) {
+      ASSERT(vec[i - 1] >= vec[i]);
+    }
+  }
+}
+
 template <typename T> void testAll() {
   for (size_t trials = 0; trials < 50; trials++) {
     testConstruction<T>();
@@ -166,10 +238,14 @@ template <typename T> void testAll() {
     testResizeLarger<T>();
     testResizeSmaller<T>();
     testIterConstruction<T>();
+    testOperators<T>();
+    testReverseOperators<T>();
+    testAlgorithms<T>();
   }
 }
 
 int main(int argc, char **argv) {
   testAll<int>();
   testAll<std::string>();
+  testAlgorithms<int>();
 }

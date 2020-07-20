@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <iterator>
 #include <stddef.h>
 
@@ -89,7 +90,7 @@ public:
    * Up to O(n)
    * If the container size requested is larger than the current
    * value, default_value (or the default value of the class) will
-   * be added to the end. If the requested size is smaller, there 
+   * be added to the end. If the requested size is smaller, there
    * will obviously be a loss of elements. A reallocation will
    * occur if the new size is beyond the current allocated storage
    * size.
@@ -101,13 +102,12 @@ public:
     // Reallocate
     if (sz > m_num_elements) {
       this->allocate(sz + 10);
-    } else if (sz > num_elements) {
-    // Allocate copied our values. We need to set the
-    // remaining defaults.
-    for (size_t i = m_num_elements; i < sz; i++) {
-      m_storage[i] = default_value;
-    }
-    // Change the tracking variable.
+      // Allocate copied our values. We need to set the
+      // remaining defaults.
+      for (size_t i = m_num_elements; i < sz; i++) {
+        m_storage[i] = default_value;
+      }
+      // Change the tracking variable.
     }
     m_num_elements = sz;
   }
@@ -132,7 +132,7 @@ public:
   class iterator
       : public std::iterator<std::input_iterator_tag, // iterator_category
                              T,                       // value_type
-                             T,                       // difference_type
+                             size_t,                       // difference_type
                              const T *,               // pointer
                              T                        // reference
                              > {
@@ -142,18 +142,63 @@ public:
   public:
     iterator(vector<T> *vector, size_t pos = 0)
         : m_vector(vector), m_pos(pos) {}
+
+    /// Prefix
     iterator &operator++() {
       m_pos++;
       return *this;
     }
+
+    /// Postfix
     iterator operator++(int) {
       iterator retval = *this;
       ++(*this);
       return retval;
     }
+
+    /// Prefix
+    iterator &operator--() {
+      m_pos--;
+      return *this;
+    }
+
+    /// Postfix
+    iterator operator--(int) {
+      iterator retval = *this;
+      --(*this);
+      return retval;
+    }
+
+    size_t operator-(const iterator &iterator) {
+      return this->m_pos - iterator.m_pos;
+    }
+
+    iterator operator+(const size_t &count) {
+      iterator return_val = *this;
+      return_val.m_pos += count;
+      return return_val;
+    }
+
+    iterator operator-(const size_t &count) {
+      iterator return_val = *this;
+      return_val.m_pos -= count;
+      return return_val;
+    }
+
+    bool operator<(const iterator &iterator) {
+      return this->m_pos < iterator.m_pos;
+    }
+
+    bool operator>(const iterator &iterator) {
+      return this->m_pos > iterator.m_pos;
+    }
+
     bool operator==(iterator other) const { return m_pos == other.m_pos; }
+
     bool operator!=(iterator other) const { return !(*this == other); }
+
     const T &operator*() const { return m_vector->operator[](m_pos); }
+
     T &operator*() { return m_vector->operator[](m_pos); }
   };
 
@@ -166,7 +211,7 @@ public:
   class reverse_iterator
       : public std::iterator<std::input_iterator_tag, // iterator_category
                              T,                       // value_type
-                             T,                       // difference_type
+                             size_t,                       // difference_type
                              const T *,               // pointer
                              T                        // reference
                              > {
@@ -185,6 +230,42 @@ public:
       ++(*this);
       return retval;
     }
+
+    reverse_iterator &operator--() {
+      m_pos--;
+      return *this;
+    }
+
+    reverse_iterator operator--(int) {
+      reverse_iterator retval = *this;
+      --(*this);
+      return retval;
+    }
+
+    size_t operator-(const reverse_iterator &iterator) {
+      return this->m_pos - iterator.m_pos;
+    }
+
+    bool operator<(const reverse_iterator &iterator) {
+      return this->m_pos < iterator.m_pos;
+    }
+
+    bool operator>(const reverse_iterator &iterator) {
+      return this->m_pos > iterator.m_pos;
+    }
+
+    reverse_iterator operator+(const size_t &count) {
+      reverse_iterator return_val = *this;
+      return_val.m_pos += count;
+      return return_val;
+    }
+
+    reverse_iterator operator-(const size_t &count) {
+      reverse_iterator return_val = *this;
+      return_val.m_pos -= count;
+      return return_val;
+    }
+
     bool operator==(reverse_iterator other) const {
       return m_pos == other.m_pos;
     }
